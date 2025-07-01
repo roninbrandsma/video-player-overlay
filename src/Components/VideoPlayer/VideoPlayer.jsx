@@ -51,23 +51,39 @@ const VideoPlayer = (props) => {
     return (
         <div className='videoContainer' data-vjs-player>
             <div ref={videoRef} />
-            <StopWatch />
+            <StopWatch  player={playerRef.current} />
         </div>
     )
 }
 
-const StopWatch = (player) => {
-    function formatTime(ms) {
-        const time = String(Math.floor(ms / 1000));
-        const minutes = String(Math.floor(time % 3600) / 60);
-        const seconds = String(Math.floor(time % 60)).padStart(2, '0');
-        return `${minutes}:${seconds}`;
-    }
+const StopWatch = ({player}) => {
+    const [time, setTime] = useState(0)
 
+    useEffect(() => {
+        if (!player) return
+
+        const updateTime = () => {
+            setTime(player.currentTime())
+        }
+
+        player.on('timeupdate', updateTime);
+
+        return () => {
+            player.off('timeupdate', updateTime);
+        };
+    }, [player]);
+
+    const formatTime = (seconds) => {
+        const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+        const secs = Math.floor(seconds % 60).toString().padStart(2, '0');
+        return (
+            `${mins}:${secs}`
+        )
+    }
 
     return (
         <div className='overlayArea'>
-            <div className='stopWatch'></div>
+            <div className='stopWatch'>{formatTime(time)}</div>
         </div>
     )
 }
