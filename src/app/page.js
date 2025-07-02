@@ -1,29 +1,31 @@
-"use client"
-
-import React, { useRef } from 'react';
-import VideoPlayer from '../Components/VideoPlayer/VideoPlayer.jsx'
+import React from "react";
+import "../Components/VideoPlayer/VideoPlayer.scss";
+import { VideoPlayer } from "../Components/VideoPlayer/VideoPlayer.jsx";
 
 export default function App() {
-const playerRef = useRef(null);
-
-  const videoJsOptions = {
-    autoplay: false,
+// config.js
+  const playerConfig = {
+    sources: [
+      {
+        src: 'https://edge.stream.easelive.tv/vod/_definst_/s3/smil:vod-assets-ireland-sixty-no/wowza/client/tippeligaen/Fotball_vod.smil/playlist.m3u8',
+      },
+    ],
     controls: true,
-    responsive: true,
+    autoplay: true,
+    preload: 'auto',
     fluid: true,
-    sources: [{
-      src: 'https://www.pexels.com/download/video/4274798/?fps=25.0&h=1080&w=1920',
-      type: 'video/mp4'
-    }]
+    responsive: true,
   };
 
-  const handlePlayerReady = (player) => {
-    playerRef.current = player;
-  };
+  const markers = [
+  { start: 218, duration: 5, graphic: 'https://www.footballdatabase.eu/images/photos/players/2015-2016/a_124/124259.jpg' },  // Show at 3s for 5s
+  { start: 10, duration: 4, graphic: '/images/graphic2.png' },  // Show at 10s for 4s
+  { start: 20, duration: 6, graphic: '/images/graphic3.png' },  // Show at 20s for 6s
+  ];
 
   return (
-    <div className='page-container'>
-      <VideoPlayer options={videoJsOptions} onReady={handlePlayerReady} />
+    <div className="App">
+      <VideoPlayer playerOptions={playerConfig} markers={markers} />
     </div>
   );
 }

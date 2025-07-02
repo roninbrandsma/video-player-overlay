@@ -1,92 +1,130 @@
-"use client"
+'use client'
+// pages/VideoPlayer.js
 
+import { useEffect, useRef, useState } from 'react';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
-import './VideoPlayer.scss';
-import { useRef, useEffect, useState } from "react";
 
+export function VideoPlayer({
+  playerOptions,
+  markers = [],  // Array of markers with { start, duration, graphic }
+}) {
+  const videoRef = useRef(null);
+  const playerRef = useRef(null);
+  const [activeMarkers, setActiveMarkers] = useState([]);
 
-const VideoPlayer = (props) => {
-    const videoRef = useRef(null);
-    const playerRef = useRef(null);
-    const {options, onReady} = props;
+  useEffect(() => {
+    // Initialize the video.js player with the passed playerOptions
+    playerRef.current = videojs(videoRef.current, {
+      ...playerOptions,
+    });
 
-    useEffect(() => {
+    const handleTimeUpdate = () => {
+      const currentTime = playerRef.current.currentTime();
+      // Find markers that are active (current time is within the start and duration)
+      const active = markers.filter(
+        (marker) => currentTime >= marker.start && currentTime < marker.start + marker.duration
+      );
+      setActiveMarkers(active);  // Update the state with active markers
+    };
 
-        // Make sure Video.js player is only initialized once
-        if (!playerRef.current) {
-        // The Video.js player needs to be _inside_ the component el for React 18 Strict Mode.
-            const videoElement = document.createElement("video-js");
-            videoElement.classList.add('vjs-big-play-centered');
-            videoRef.current.appendChild(videoElement);
+    // Listen for time updates to show/hide overlays
+    playerRef.current.on('timeupdate', handleTimeUpdate);
 
-            const player = playerRef.current = videojs(videoElement, options, () => {
-                videojs.log('player is ready');
-                onReady && onReady(player);
-            });
+    // Cleanup on component unmount
+    return () => {
+      playerRef.current.off('timeupdate', handleTimeUpdate);
+      if (playerRef.current) {
+        playerRef.current.dispose();
+      }
+    };
+  }, [playerOptions, markers]);  // Re-run effect if markers or playerOptions change
 
-            // You could update an existing player in the `else` block here
-            // on prop change, for example:
-        } else {
-            const player = playerRef.current;
+  return (
+    <div className="video-container">
+      <video
+        ref={videoRef}
+        className="video-js vjs-default-skin"
+        controls
+        preload="auto"
+        autoPlay
+        data-setup="{}"
+      >
+        {playerOptions.sources.map((source, index) => (
+          <source key={index} src={source.src} type={source.type} />
+        ))}
+        Your browser does not support the video tag.
+      </video>
 
-            player.autoplay(options.autoplay);
-            player.src(options.sources);
-
-        }
-        }, [options, videoRef]);
-
-        // Dispose the Video.js player when the functional component unmounts
-    useEffect(() => {
-        const player = playerRef.current;
-
-        return () => {
-            if (player && !player.isDisposed()) {
-                player.dispose();
-                playerRef.current = null;
-            }
-        };
-    }, [playerRef]);
-
-    return (
-        <div className='videoContainer' data-vjs-player>
-            <div ref={videoRef} />
-            <StopWatch  player={playerRef.current} />
+      {/* Render active markers */}
+      {activeMarkers.map((marker, index) => (
+        <div
+          key={index}
+          className="overlay"
+          style={{
+            display: 'flex',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundSize: 'contain',
+            backgroundPosition: 'center',
+            zIndex: 10,
+            pointerEvents: 'none',
+          }}
+        >
+          {/* You can customize the content of each overlay */}
+            <div style={{
+              key: [0],
+              position: 'absolute',
+              bottom: '30px',
+              left: 0,
+              backgroundColor: 'rgba(255, 255, 255, 0.75)',
+              border: '2px solid #ffffff55',
+              fontFamily: 'sans-serif',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              display: 'flex',
+              gap: '10px',
+              boxShadow: '0 0 10px rgba(0,0,0,0.6)'
+            }}
+          >
+              <img src={marker.graphic} style={{
+                  width: '80px',
+              }}/>
+              <h2 style={{
+                fontWeight: 'bold',
+                alignSelf: 'start',
+                fontStyle: 'italic',
+              }}>
+                GOAL!
+              </h2>
+              <h3 style={{
+                fontWeight: '10px',
+                alignSelf: 'end',
+              }}>
+                Robert Lundström
+              </h3>
+            </div>
         </div>
-    )
-}
+      ))}
 
-const StopWatch = ({player}) => {
-    const [time, setTime] = useState(0)
-
-    useEffect(() => {
-        if (!player) return
-
-        const updateTime = () => {
-            setTime(player.currentTime())
+      <style jsx>{`
+        .video-container {
+          position: relative;
+          max-width: 100%;
+          width: 800px;  // or set the width as you want
+          margin: auto;
         }
 
-        player.on('timeupdate', updateTime);
-
-        return () => {
-            player.off('timeupdate', updateTime);
-        };
-    }, [player]);
-
-    const formatTime = (seconds) => {
-        const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
-        const secs = Math.floor(seconds % 60).toString().padStart(2, '0');
-        return (
-            `${mins}:${secs}`
-        )
-    }
-
-    return (
-        <div className='overlayArea'>
-            <div className='stopWatch'>{formatTime(time)}</div>
-        </div>
-    )
+        video {
+          width: 100%;
+          height: auto;
+        }
+      `}</style>
+    </div>
+  );
 }
-
-
-export default VideoPlayer;
