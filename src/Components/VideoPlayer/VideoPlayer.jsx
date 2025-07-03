@@ -4,6 +4,8 @@
 import { useEffect, useRef, useState } from 'react';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
+import '../VideoPlayer/VideoPlayer.scss'
+import KickoffGraphic from '../Overlays/Kickoff';
 
 export function VideoPlayer({
   playerOptions,
@@ -68,47 +70,121 @@ export function VideoPlayer({
             left: 0,
             right: 0,
             bottom: 0,
-            justifyContent: 'center',
-            alignItems: 'center',
             backgroundSize: 'contain',
             backgroundPosition: 'center',
             zIndex: 10,
             pointerEvents: 'none',
+            overflow: 'hidden',
           }}
         >
           {/* You can customize the content of each overlay */}
-            <div style={{
-              key: [0],
-              position: 'absolute',
-              bottom: '30px',
-              left: 0,
-              backgroundColor: 'rgba(255, 255, 255, 0.75)',
-              border: '2px solid #ffffff55',
-              fontFamily: 'sans-serif',
-              fontSize: '16px',
-              fontWeight: 'bold',
+          {marker.type === 'shotsOnTarget' && (
+            <div className='shotOnTarget' style={{
+              position: 'relative',
               display: 'flex',
-              gap: '10px',
-              boxShadow: '0 0 10px rgba(0,0,0,0.6)'
-            }}
-          >
+              alignSelf: 'end',
+              justifySelf: 'start',
+              bottom: '30px',
+              backgroundColor: 'rgba(255, 255, 255, 0.85)',
+              color: 'black',
+              padding: '8px 8px',
+              fontFamily: 'Arial, Helvetica, sans-serif',
+              fontSize: '20px',
+              gap: '8px',
+              borderRadius: '0 8px 8px 0',
+              borderTop: '2px solid white',
+              borderRight: '2px solid white',
+              borderBottom: '2px solid white',
+              width: '50%',
+              height: '20%'
+              // animation: 'slideInOut 6s ease-in-out forwards'
+            }}>
               <img src={marker.graphic} style={{
-                  width: '80px',
+                width: '100px',
+                borderRadius: '8px',
+                border: '2px solid white'
               }}/>
-              <h2 style={{
-                fontWeight: 'bold',
-                alignSelf: 'start',
-                fontStyle: 'italic',
+
+              <div style={{
+                display: 'block',
+                alignContent: 'center',
+                width: '60%',
               }}>
-                GOAL!
-              </h2>
-              <h3 style={{
-                fontWeight: '10px',
-                alignSelf: 'end',
+                <span style={{
+                  fontWeight: 'bold',
+                  justifySelf: 'center',
+                  alignSelf: 'center',
+                }}>Shots on Target: </span>
+
+                <span style={{
+                  justifySelf: 'center',
+                  alignSelf: 'center',
+                  paddingTop: '15px',
+                  fontWeight: 'bold',
+                }}>
+                  {marker.player}
+                </span>
+              </div>
+
+              <span style={{
+                fontWeight: 'lighter',
+                fontSize: '40px',
+                justifySelf: 'center',
+                alignSelf: 'center',
               }}>
-                Robert Lundström
-              </h3>
+                {marker.shots}
+              </span>
             </div>
+          )}
+
+          {marker.type === 'goal' && (
+            <div index={0} className='goal' style={{
+              position: 'relative',
+              display: 'flex',
+              alignSelf: 'end',
+              justifySelf: 'start',
+              bottom: '30px',
+              gap: '12px',
+              backgroundColor: 'rgba(255, 255, 255, 0.85)',
+              color: 'black',
+              padding: '10px 20px',
+              borderRadius: '10px',
+              fontFamily: 'Arial, Helvetica, sans-serif',
+              border: '2px solid white',
+              animation: 'slideInOut 8s ease-in-out forwards'
+              }}
+            >
+              <img src={marker.graphic} style={{ width: '50px', borderRadius: '8px', border: '2px solid white' }} alt="Team" />
+
+              <div style={{
+                display: 'block',
+              }}>
+                <span style={{
+                  alignSelf: 'end',
+                  justifySelf: 'center',
+                  fontWeight: 'bold',
+                  fontStyle: 'italic',
+                  fontSize: '20px',
+                  display: 'block',
+                }}>
+                  ⚽ GOAL!
+                </span>
+
+                <span style={{
+                  justifySelf: 'center',
+                  paddingTop: '15px',
+                  fontWeight: 'bold',
+                  display: 'block',
+                }}>
+                  {marker.player} {marker.minute}ʼ
+                </span>
+              </div>
+            </div>
+          )}
+
+          {marker.type === 'kickoff' && (
+            <KickoffGraphic teamA={'TEAM A'} teamB={'TEAM B'} teamALogo={'assets/teamA.png'} teamBLogo={'assets/teamB.png'} />
+          )}
         </div>
       ))}
 
