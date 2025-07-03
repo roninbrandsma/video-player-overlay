@@ -81,11 +81,6 @@ export function VideoPlayer({
   const [activeMarkers, setActiveMarkers] = useState([]);
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
 
   useEffect(() => {
     // Initialize the video.js player with the passed playerOptions
@@ -113,6 +108,12 @@ export function VideoPlayer({
       }
     };
   }, [playerOptions, markers]);  // Re-run effect if markers or playerOptions change
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
 
   const handleTimeClick = (time) => {
     if (playerRef && playerRef.current) {
