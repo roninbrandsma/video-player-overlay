@@ -79,6 +79,13 @@ export function VideoPlayer({
   const videoRef = useRef(null);
   const playerRef = useRef(null);
   const [activeMarkers, setActiveMarkers] = useState([]);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
 
   useEffect(() => {
     // Initialize the video.js player with the passed playerOptions
