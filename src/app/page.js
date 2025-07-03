@@ -1,3 +1,4 @@
+'use client'
 import React from "react";
 import "../Components/VideoPlayer/VideoPlayer.scss";
 import { VideoPlayer } from "../Components/VideoPlayer/VideoPlayer.jsx";
