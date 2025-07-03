@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
 export default function FullTimeStatsOverlay({
-	duration,
   teamA = 'TEAM A',
   teamB = 'TEAM B',
   scoreA = 1,
@@ -15,16 +14,6 @@ export default function FullTimeStatsOverlay({
     YellowCards: [2, 3],
   }
 }) {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    setVisible(true);
-    const timer = setTimeout(() => setVisible(false), duration);
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (!visible) return null;
-
   return (
     <div
       style={{

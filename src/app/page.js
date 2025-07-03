@@ -1,6 +1,31 @@
 import React from "react";
 import "../Components/VideoPlayer/VideoPlayer.scss";
 import { VideoPlayer } from "../Components/VideoPlayer/VideoPlayer.jsx";
+import './globals.css'
+const styles = {
+  header: {
+    backgroundColor: '#183642',
+    color: 'white',
+    margin: 0,
+    marginBottom: '10px',
+    paddingTop: '5px',
+    paddingBottom: '5px',
+    textAlign: 'center',
+  },
+
+  footer: {
+    backgroundColor: '#183642',
+    color: 'white',
+    margin: 0,
+    marginTop: '10px',
+    paddingTop: '5px',
+    paddingBottom: '5px',
+    textAlign: 'center',
+    height: '45px',
+    alignItems: 'center',
+    lineHeight: '45px',
+  }
+}
 
 export default function App() {
 // config.js
@@ -13,13 +38,16 @@ export default function App() {
     controls: true,
     autoplay: true,
     preload: 'auto',
-    fluid: true,
-    responsive: true,
+    fluid: false,
+    responsive: false,
+    fill: true,
+    aspectRatio: '16:9',
+    controlBar: {fullscreenToggle: false}
   };
 
   const markers = [
     { start: 14, duration: 7, graphic: '', type: 'entrance' },  // Show at 3s for 5s
-    { start: 39, duration: 20, graphic: '', type: 'stats'},  // Show at 3s for 5s
+    { start: 39, duration: 15, graphic: '', type: 'stats'},  // Show at 3s for 5s
     { start: 65, duration: 20, graphic: '', type: 'highlightedPlayer'},  // Show at 3s for 5s
     { start: 136, duration: 6, graphic: '', type: 'kickoff'},  // Show at 20s for 6s
     { start: 200, duration: 4, graphic: '', type: 'throwIn', team: 'TEAM A'},  // Show at 20s for 6s
@@ -39,13 +67,19 @@ export default function App() {
     { start: 686, duration: 4, graphic: '', type: 'yellowCard', team: 'TEAM B', player: 'Ethan Wallace', number: '11'},  // Show at 10s for 4s
     { start: 732, duration: 10, graphic: 'assets/placeholderHeadshot.jpg', type: 'goal', player: 'Marcus Bennett', minute: '87' },  // Show at 10s for 4s
     { start: 805, duration: 4, graphic: '', type: 'freeKick', team: 'TEAM B'},  // Show at 10s for 4s
-    { start: 846, duration: 15, graphic: '', type: 'fullTime'},  // Show at 10s for 4s
+    { start: 846, duration: 14, graphic: '', type: 'fullTime'},  // Show at 10s for 4s
     { start: 860, duration: 30, graphic: '', type: 'fullTimeStats'},  // Show at 10s for 4s
   ];
 
   return (
     <div className="App">
+      <div style={styles.header}>
+        <h1>Timeline Video</h1>
+      </div>
       <VideoPlayer playerOptions={playerConfig} markers={markers} />
+      <div style={styles.footer}>
+        <p>Made by Ronin Brandsma</p>
+      </div>
     </div>
   );
 }

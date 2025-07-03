@@ -1,16 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-export default function EntranceCard({ teamA, teamB, teamALogo, teamBLogo, duration }) {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    setVisible(true);
-    const timeout = setTimeout(() => {
-      setVisible(false);
-    }, duration);
-    return () => clearTimeout(timeout);
-  }, [duration]);
-
+export default function EntranceCard({ teamA, teamB, teamALogo, teamBLogo }) {
   return (
     <div
       style={{
@@ -23,14 +13,14 @@ export default function EntranceCard({ teamA, teamB, teamALogo, teamBLogo, durat
         background: 'linear-gradient(to right, #001f3f, #003366)',
         borderRadius: '16px',
         boxShadow: '0 0 20px rgba(0,0,0,0.6)',
-        display: visible ? 'flex' : 'none',
+        display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         padding: '0 40px',
         color: 'white',
         fontFamily: 'sans-serif',
         zIndex: 100,
-        opacity: visible ? 1 : 0,
+        opacity: 1,
         transition: 'opacity 1s ease-in-out',
         gap: '80px' // this sets the space between team blocks and brings logos closer
       }}
