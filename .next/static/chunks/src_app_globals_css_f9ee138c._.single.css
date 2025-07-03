@@ -1,0 +1,25 @@
+/* [project]/src/app/globals.css [app-client] (css) */
+* {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+h1 {
+  font-size: 40px;
+}
+
+body {
+  margin: 0 !important;
+}
+
+html {
+  height: 100%;
+}
+
+.page-container {
+  flex-direction: column;
+  min-height: 100%;
+  display: flex;
+}
+
+/*# sourceMappingURL=src_app_globals_css_f9ee138c._.single.css.map*/

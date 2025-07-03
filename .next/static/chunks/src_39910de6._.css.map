@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 1, "column": 0}, "map": {"version":3,"sources":["file:///D:/repos/portfolio/video-player-overlay/src/Components/VideoPlayer/VideoPlayer.scss.css"],"sourcesContent":["@keyframes slideInOut{0%{left:-100%}10%{left:20px}90%{left:20px}100%{left:-100%}}"],"names":[],"mappings":"AAAA","debugId":null}},
+    {"offset": {"line": 21, "column": 0}, "map": {"version":3,"sources":["file:///D:/repos/portfolio/video-player-overlay/src/app/globals.css"],"sourcesContent":["* {\r\n  margin: 0;\r\n  font-family: Arial, Helvetica, sans-serif;\r\n}\r\n\r\nh1 {\r\n  font-size: 40px;\r\n}\r\n\r\nbody {\r\n  margin: 0 !important;\r\n}\r\n\r\nhtml {\r\n  height: 100%;\r\n}\r\n\r\n.page-container {\r\n  display: flex;\r\n  flex-direction: column;\r\n  min-height: 100%;\r\n}\r\n\r\n\r\n"],"names":[],"mappings":"AAAA;;;;;AAKA;;;;AAIA;;;;AAIA;;;;AAIA","debugId":null}}]
+}

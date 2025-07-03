@@ -41,6 +41,8 @@ export default function App() {
     preload: 'auto',
     fluid: false,
     responsive: false,
+    width: 1280,
+    height: 720,
     fill: true,
     aspectRatio: '16:9',
     controlBar: {fullscreenToggle: false}

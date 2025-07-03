@@ -79,15 +79,19 @@ export function VideoPlayer({
   const videoRef = useRef(null);
   const playerRef = useRef(null);
   const [activeMarkers, setActiveMarkers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [hasMounted, setHasMounted] = useState(false);
 
+    useEffect(() => {
+        setHasMounted(true);
+    }, []);
 
-  useEffect(() => {
-    // Initialize the video.js player with the passed playerOptions
-    playerRef.current = videojs(videoRef.current, {
+    useEffect(() => {
+      if (!hasMounted || !playerOptions) return;
+      playerRef.current = videojs(videoRef.current, {
       ...playerOptions,
     });
-
+    playerRef.current.height(720)
+    playerRef.current.width(1280)
     const handleTimeUpdate = () => {
       const currentTime = playerRef.current.currentTime();
       // Find markers that are active (current time is within the start and duration)
@@ -106,18 +110,37 @@ export function VideoPlayer({
       if (playerRef.current) {
         playerRef.current.dispose();
       }
-    };
-  }, [playerOptions, markers]);  // Re-run effect if markers or playerOptions change
+    };  }, [markers, hasMounted, playerOptions]);
 
+      // Re-run effect if markers or playerOptions change
+  console.log(playerRef?.current?.currentTime)
+  console.log(markers)
+  console.log(activeMarkers)
   const handleTimeClick = (time) => {
     if (playerRef && playerRef.current) {
       playerRef.current.currentTime(time);
     }
   }
 
+
+  if (!hasMounted) {
+    return (
+      <div className="loading-spinner">
+        <p>Loading video...</p>
+        {/* Replace with a real spinner if desired */}
+        <style jsx>{`
+          .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 720px;
+            font-size: 18px;
+          }
+        `}</style>
+      </div>
+    );
+  }
   return (
-    <>
-    {videoRef && videoRef.current && (
       <div style={styles.page}>
       <div className="video-container">
         <video
@@ -127,7 +150,7 @@ export function VideoPlayer({
           preload="auto"
           autoPlay
           data-setup="{}"
-          >
+        >
           {playerOptions.sources.map((source, index) => (
             <source key={index} src={source.src} type={source.type} />
           ))}
@@ -153,7 +176,7 @@ export function VideoPlayer({
             overflow: 'hidden',
           }}
           >
-            {/* You can customize the content of each overlay */}
+          {/* You can customize the content of each overlay */}
             {marker.type === 'shotsOnTarget' && (
               <div className='shotOnTarget' style={{
                 position: 'relative',
@@ -316,9 +339,8 @@ export function VideoPlayer({
         <style jsx>{`
           .video-container {
             position: relative;
-            max-width: 100%;
-            width: 1280px;
-            height: 720px;  // or set the width as you want
+            width: 1280px !important;
+            height: 720px !important;  // or set the width as you want
             margin: auto;
             }
 
@@ -330,7 +352,7 @@ export function VideoPlayer({
       </div>
       <div className='timeline-container'>
         <h3>Timeline Markers</h3>
-          {playerRef && playerRef.current && markers && markers.map((marker, key) => (
+          {markers && markers.map((marker, key) => (
             <div
             key={key}
             style={styles.item}
@@ -342,7 +364,6 @@ export function VideoPlayer({
         ))}
       </div>
     </div>
-    )}
-    </>
+
   );
 }
