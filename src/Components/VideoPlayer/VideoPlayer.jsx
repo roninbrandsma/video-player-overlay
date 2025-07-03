@@ -79,7 +79,7 @@ export function VideoPlayer({
   const videoRef = useRef(null);
   const playerRef = useRef(null);
   const [activeMarkers, setActiveMarkers] = useState([]);
-  const [mounted, setMounted] = useState(false);
+  const [loading, setLoading] = useState(true);
 
 
   useEffect(() => {
@@ -109,12 +109,6 @@ export function VideoPlayer({
     };
   }, [playerOptions, markers]);  // Re-run effect if markers or playerOptions change
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
-
   const handleTimeClick = (time) => {
     if (playerRef && playerRef.current) {
       playerRef.current.currentTime(time);
@@ -122,7 +116,9 @@ export function VideoPlayer({
   }
 
   return (
-    <div style={styles.page}>
+    <>
+    {videoRef && videoRef.current && (
+      <div style={styles.page}>
       <div className="video-container">
         <video
           ref={videoRef}
@@ -131,7 +127,7 @@ export function VideoPlayer({
           preload="auto"
           autoPlay
           data-setup="{}"
-        >
+          >
           {playerOptions.sources.map((source, index) => (
             <source key={index} src={source.src} type={source.type} />
           ))}
@@ -141,21 +137,21 @@ export function VideoPlayer({
         {/* Render active markers */}
         {activeMarkers.map((marker, index) => (
           <div
-            key={index}
-            className="overlay"
-            style={{
-              display: 'flex',
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              backgroundSize: 'contain',
-              backgroundPosition: 'center',
-              zIndex: 10,
-              pointerEvents: 'none',
-              overflow: 'hidden',
-            }}
+          key={index}
+          className="overlay"
+          style={{
+            display: 'flex',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundSize: 'contain',
+            backgroundPosition: 'center',
+            zIndex: 10,
+            pointerEvents: 'none',
+            overflow: 'hidden',
+          }}
           >
             {/* You can customize the content of each overlay */}
             {marker.type === 'shotsOnTarget' && (
@@ -232,7 +228,7 @@ export function VideoPlayer({
                 fontFamily: 'Arial, Helvetica, sans-serif',
                 border: '2px solid white',
                 animation: 'slideInOut 8s ease-in-out forwards'
-                }}
+              }}
               >
                 <img src={marker.graphic} style={{ width: '50px', borderRadius: '8px', border: '2px solid white' }} alt="Team" />
 
@@ -324,27 +320,29 @@ export function VideoPlayer({
             width: 1280px;
             height: 720px;  // or set the width as you want
             margin: auto;
-          }
+            }
 
-          video {
-            width: 100%;
-            height: 100%;
-          }
-        `}</style>
+            video {
+              width: 100%;
+              height: 100%;
+              }
+              `}</style>
       </div>
       <div className='timeline-container'>
         <h3>Timeline Markers</h3>
           {playerRef && playerRef.current && markers && markers.map((marker, key) => (
-          <div
+            <div
             key={key}
             style={styles.item}
             onClick={() => handleTimeClick(marker.start)}
-          >
+            >
             <span style={styles.time}>{formatTime(marker.start)}</span>
             <span style={styles.type}>{marker.type}</span>
           </div>
         ))}
       </div>
     </div>
+    )}
+    </>
   );
 }
