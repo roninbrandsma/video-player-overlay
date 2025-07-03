@@ -6,6 +6,18 @@ import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import '../VideoPlayer/VideoPlayer.scss'
 import KickoffGraphic from '../Overlays/Kickoff';
+import EntranceCard from '../Overlays/Entrance';
+import TeamRecentStatsCard from '../Overlays/Stats';
+import PlayerStatsCard from '../Overlays/HighlightedPlayer';
+import ThrowInOverlay from '../Overlays/ThrowIn';
+import OffsideOverlay from '../Overlays/Offside';
+import FreeKickOverlay from '../Overlays/Freekick';
+import CornerKickOverlay from '../Overlays/CornerKick';
+import HalftimeOverlay from '../Overlays/Halftime';
+import SubstitutionOverlay from '../Overlays/Subs';
+import YellowCardOverlay from '../Overlays/YellowCard';
+import FullTimeOverlay from '../Overlays/Fulltime';
+import FullTimeStatsOverlay from '../Overlays/FulltimeStats';
 
 export function VideoPlayer({
   playerOptions,
@@ -185,6 +197,55 @@ export function VideoPlayer({
           {marker.type === 'kickoff' && (
             <KickoffGraphic teamA={'TEAM A'} teamB={'TEAM B'} teamALogo={'assets/teamA.png'} teamBLogo={'assets/teamB.png'} />
           )}
+
+          {marker.type === 'entrance' && (
+            <EntranceCard teamA={'TEAM A'} teamB={'TEAM B'} teamALogo={'assets/teamA.png'} teamBLogo={'assets/teamB.png'} duration={marker.duration * 1000} />
+          )}
+
+          {marker.type === 'stats' && (
+            <TeamRecentStatsCard teamALogo={'assets/teamA.png'} teamBLogo={'assets/teamB.png'} />
+          )}
+
+          {marker.type === 'highlightedPlayer' && (
+            <PlayerStatsCard />
+          )}
+
+          {marker.type === 'throwIn' && (
+            <ThrowInOverlay team={marker.team} />
+          )}
+
+          {marker.type === 'offside' && (
+            <OffsideOverlay team={marker.team} />
+          )}
+
+          {marker.type === 'freeKick' && (
+            <FreeKickOverlay team={marker.team} />
+          )}
+
+          {marker.type === 'cornerKick' && (
+            <CornerKickOverlay team={marker.team} />
+          )}
+
+          {marker.type === 'halfTime' && (
+            <HalftimeOverlay />
+          )}
+
+          {marker.type === 'substitution' && (
+            <SubstitutionOverlay teamName={marker.team} playerOut={marker.playerOut} playerIn={marker.playerIn} />
+          )}
+
+          {marker.type === 'yellowCard' && (
+            <YellowCardOverlay teamName={marker.team} playerName={marker.player} shirtNumber={marker.number} />
+          )}
+
+          {marker.type === 'fullTime' && (
+            <FullTimeOverlay teamA={'TEAM A'} teamB={'TEAM B'} />
+          )}
+
+          {marker.type === 'fullTimeStats' && (
+            <FullTimeStatsOverlay duration={marker.duration * 1000} />
+          )}
+
         </div>
       ))}
 
